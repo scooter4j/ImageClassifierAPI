@@ -1,0 +1,70 @@
+Image Classification Project
+
+Environment setup
+=========================================================================================
+1. install Conda
+-----------------------------------------------------------------------------------------
+2. set up a conda environment for the Project and activate it
+
+conda create --name image_classification python=3.6.6
+source activate image_classification
+
+-----------------------------------------------------------------------------------------
+3. Install packages/libraries in the conda environment. Had to install the following:
+ - Tensorflow
+ - flask
+ - flask-basicauth (conda install -c conda-forge flask-basicauth)
+ - maybe others.... need to revisit and document
+
+list of installed packages:
+(image_classification) scottqueen:code $ conda list
+# packages in environment at /anaconda3/envs/image_classification:
+#
+# Name                    Version                   Build  Channel
+absl-py                   0.6.1                     <pip>
+astor                     0.7.1                     <pip>
+bzip2                     1.0.6                         1    conda-forge
+ca-certificates           2018.11.29           ha4d7672_0    conda-forge
+certifi                   2018.11.29            py36_1000    conda-forge
+chardet                   3.0.4                     <pip>
+click                     7.0                      py36_0  
+flask                     1.0.2                    py36_1  
+flask-basicauth           0.2.0                      py_2    conda-forge
+gast                      0.2.0                     <pip>
+grpcio                    1.16.0                    <pip>
+h5py                      2.8.0                     <pip>
+idna                      2.7                       <pip>
+itsdangerous              1.1.0                    py36_0  
+jinja2                    2.10                     py36_0  
+Keras-Applications        1.0.6                     <pip>
+Keras-Preprocessing       1.0.5                     <pip>
+libcxx                    4.0.1                hcfea43d_1  
+libcxxabi                 4.0.1                hcfea43d_1  
+libedit                   3.1.20170329         hb402a30_2  
+libffi                    3.2.1                h475c297_4  
+Markdown                  3.0.1                     <pip>
+markupsafe                1.1.0            py36h1de35cc_0  
+ncurses                   6.1                  h0a44026_0  
+numpy                     1.15.3                    <pip>
+openssl                   1.0.2p               h470a237_1    conda-forge
+Pillow                    5.3.0                     <pip>
+pip                       10.0.1                   py36_0  
+protobuf                  3.6.1                     <pip>
+python                    3.6.6                h5001a0f_0    conda-forge
+readline                  7.0                  h1de35cc_5  
+requests                  2.20.0                    <pip>
+setuptools                39.1.0                    <pip>
+setuptools                40.4.3                   py36_0  
+six                       1.11.0                    <pip>
+sqlite                    3.25.2               ha441bb4_0  
+tensorboard               1.11.0                    <pip>
+tensorflow                1.11.0                    <pip>
+tensorflow-hub            0.1.1                     <pip>
+termcolor                 1.1.0                     <pip>
+tk                        8.6.8                ha441bb4_0  
+urllib3                   1.24.1                    <pip>
+werkzeug                  0.14.1                   py36_0  
+Werkzeug                  0.14.1                    <pip>
+wheel                     0.32.2                   py36_0  
+xz                        5.2.4                h1de35cc_4  
+zlib                      1.2.11               hf3cbc9b_2

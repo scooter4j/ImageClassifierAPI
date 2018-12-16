@@ -1,0 +1,17 @@
+Building Lambda deployment .zip file
+
+1. Create a folder in which to build a clean and minimal package, e.g. /Users/scottqueen/temp/AI_for_lambda
+2. create a `classification_model` folder under the build folder and copy the classification model and label files into it
+3. copy the Tensorflow and numpy libraries into the top-level build folder, eg /Users/scottqueen/temp/AI_for_lambda. To do this, execute this:
+
+cp -r /anaconda3/envs/image_classification/lib/python3.6/site-packages/tensorflow .
+cp -r /anaconda3/envs/image_classification/lib/python3.6/site-packages/numpy
+
+4. copy the Lambda function code into the top-level build folder, eg /Users/scottqueen/temp/AI_for_lambda
+
+cp /Users/scottqueen/AI/code/classify_image_lambda.py .
+
+5. from the top-level build folder, create a zip file of the deployment artifacts
+
+zip * lambda_image_classifer.zip
+
