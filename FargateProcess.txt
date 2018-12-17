@@ -1,0 +1,74 @@
+In general following this: https://medium.com/@daniel.revie1/deploying-react-docker-image-to-aws-fargate-bf551128cb88
+
+In scooter4j@gmail.com AWS account (https://scooter4j.signin.aws.amazon.com/console/)
+1. ECS console
+- created PestClassifier Fargate cluster
+VPC CIDR: 10.9.0.0/16
+subnet1: 10.9.0.0/24
+subnet2: 10.9.1.0/24
+
+
+Results of cluster creation:
+VPC vpc-066a3baefa5f5cb57
+Subnet 1 subnet-035f58353d91de769
+Subnet 1 route table association rtbassoc-0f9ca606f38024707
+Subnet 2 subnet-0ebd9efc5d29d62ff
+Subnet 2 route table association rtbassoc-004ff8ca4a9ab0210
+VPC Availability Zones us-east-2a, us-east-2b, us-east-2c
+Internet gateway igw-09da736d8f133322c
+Route table rtb-0f796b3680c4f9265
+Amazon EC2 route EC2Co-Publi-1P2USOF26U18V
+Virtual private gateway attachment EC2Co-Attac-12FYKTVX80JBD 
+
+
+2. EC2 console
+- created PestClassifier-LB load balancer
+associated two security groups with the load balancer: the default one for the VPC that was created, and one
+built to enable me to debug (sq-debug, which has rules to allows inbound on ports 22, 80, and 5000 from my home ip
+address and the ip address of an investigatory EC2 instance I set up, and allows access to itself... this proved to be
+important as I set up the security group for the Fargate Service using this same SG, and the LoadBalancer needs
+inbound access to the Fargate Service. JUST REMEMBER THAT THE FARGATE SERVICE SECURITY GROUP NEEDS TO GIVE INBOUND
+ACCESS TO THE LOAD-BALANCER SECURITY GROUP)  IT'S PROBABLY BETTER TO HAVE DIFFERENT SGS AS THE LOAD BALANCER NEEDS TO
+GRANT INBOUND ONLY ON PORT 80, AND THE FARGATE SERVICE ONLY NEEDS TO GRANT INBOUND ON 5000. REVISIT THIS.
+
+For the load-balancer listener, I configured listeners on both ports 80 and 5000, and it works on both, but I'm confident 
+I don't need port 5000 here .... NEED TO REVISIT AND REMOVE THIS.
+
+On load-balancer creation, Step 4 (Configure Routing) what you're in reality doing is building a Target Group. The protocol is HTTP, the target type is ip, and the port is 5000 (not 80). This is because I planned to let the docker containers listen on port 5000....
+in any case, the port needs to align with the listening port of the service to which the request is being passed back.
+
+3. Back to ECS Console, then > Amazon ECR Repositories link
+- select region (Ohio) and Create Repository
+- create repository with name PestClassifier-fargate  (689503648097.dkr.ecr.us-east-2.amazonaws.com/PestClassifier-fargate)
+
+ECR Repository Push commands (from the console):
+		Ensure you have installed the latest version of the AWS CLI and Docker. For more information, see the ECR documentation .
+
+			Retrieve the login command to use to authenticate your Docker client to your registry.
+			Use the AWS CLI:
+
+			$(aws --profile scooter4j ecr get-login --no-include-email --region us-east-2)  [I added the profile flag]
+
+		Note: If you receive an "Unknown options: --no-include-email" error when using the AWS CLI, ensure that you have the latest version installed. Learn more 
+		Build your Docker image using the following command. For information on building a Docker file from scratch see the instructions here . You can skip this step if your image is already built:
+
+		docker build -t PestClassifier-fargate .
+
+		After the build completes, tag your image so you can push the image to this repository:
+
+		docker tag PestClassifier-fargate:latest 689503648097.dkr.ecr.us-east-2.amazonaws.com/PestClassifier-fargate:latest
+
+		Run the following command to push this image to your newly created AWS repository:
+
+		docker push 689503648097.dkr.ecr.us-east-2.amazonaws.com/PestClassifier-fargate:latest
+		
+
+4. After pushing image to ECR, set up Task Definition
+ - created PestClassifier-task1 task, left Task Role blank, specified 1GB memory and 0.5vCPU, provided image reference (689503648097.dkr.ecr.us-east-2.amazonaws.com/PestClassifier-fargate:latest), skipped Private Repo auth, Memory Limits, set container port to 5000 despite a "warning" statement that the value would be ignored. The end result for port mapping was both host and container ports being 5000. Skipped all of the other settings (healthcheck, etc.... I think those values have already been set and this may be a way to override???). 
+ 
+5. Back to ECS console to create a service to run the container
+- ECS > Clusters > ClassifierService > Services > Create.... select Fargate as the launch type, entered PestClassifier as the Service name, 1 for the number of tasks, obvious settings for the other param, Next....
+- selected VPC and both subnets, selected my sq-debug security group (NOTE: HERE IS WHERE YOU NEED TO MAKE SURE THE SG ALLOWS THE
+LOAD BALANCER TO TALK TO THE SERVICE) and auto-assign public IP selections, selected Application Load Balancer and the load balancer created above, then "Add to Load Balancer" button, then select Production Listener Port (80:HTTP) and the target group created earlier. Turned off "enable service discovery" for now. Next....
+- accept default auto-scaling setting and Next....
+- review and click Create Service button

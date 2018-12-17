@@ -1,0 +1,5 @@
+curl \
+--header "Content-Type:application/octet-stream" \
+--trace-ascii debugdump.txt \
+--data-binary @/Users/scottqueen/AI/PestClassifier/images/training_images/japanese_beetles/00000227.jpg \
+http://pestclassifier-lb-1792844833.us-east-2.elb.amazonaws.com/ci
