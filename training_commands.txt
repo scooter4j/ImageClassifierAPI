@@ -1,0 +1,36 @@
+sudo python retrain.py \
+--image_dir /Users/scottqueen/AI/images/training_images \
+--output_graph /Users/scottqueen/AI/IncV3_Retr_artifacts/pestsClassifier/pests_IncV3_2.pb \
+--output_labels /Users/scottqueen/AI/IncV3_Retr_artifacts/pestsClassifier/pests_IncV3_2_labels.txt \
+--bottleneck_dir /Users/scott/AI/IncV3_Retr_artifacts/pestsClassifier \
+--saved_model_dir /Users/scott/AI/IncV3_Retr_artifacts/pestsClassifier/saved_model
+
+sudo python retrain.py \
+--image_dir /Users/scottqueen/AI/images/training_images \
+--output_graph /Users/scottqueen/AI/MobileNet_v2_artifacts/pestsClassifier/pests_MobNetV2_1.pb \
+--output_labels /Users/scottqueen/AI/MobileNet_v2_artifacts/pestsClassifier/pests_MobNetV2_1_labels.txt \
+--bottleneck_dir /Users/scottqueen/AI/MobileNet_v2_artifacts/pestsClassifier \
+--saved_model_dir /Users/scottqueen/AI/MobileNet_v2_artifacts/pestsClassifier/saved_model \
+--tfhub_module https://tfhub.dev/google/imagenet/mobilenet_v2_100_224/feature_vector/2
+
+
+python label_image.py \
+--graph=/Users/scottqueen/AI/IncV3_Retr_artifacts/pestsClassifier/pests_IncV3_2.pb \
+--labels=/Users/scottqueen/AI/IncV3_Retr_artifacts/pestsClassifier/pests_IncV3_2_labels.txt \
+--input_layer=Placeholder \
+--output_layer=final_result \
+--image=/Users/scottqueen/AI/images/training_images/japanese_beetles/00000176.jpg
+
+python label_image.py \
+--graph=/Users/scottqueen/AI/IncV3_Retr_artifacts/pestsClassifier/pests_IncV3_2.pb \
+--labels=/Users/scottqueen/AI/IncV3_Retr_artifacts/pestsClassifier/pests_IncV3_2_labels.txt \
+--input_layer=Placeholder \
+--output_layer=final_result \
+--image=/Users/scottqueen/AI/images/training_images/corn_earworm/00000018.jpg
+
+python label_image.py \
+--graph=/Users/scottqueen/AI/IncV3_Retr_artifacts/pestsClassifier/pests_IncV3_2.pb \
+--labels=/Users/scottqueen/AI/IncV3_Retr_artifacts/pestsClassifier/pests_IncV3_2_labels.txt \
+--input_layer=Placeholder \
+--output_layer=final_result \
+--image=/Users/scottqueen/Desktop/220px-Green_Stink_Bug.jpg

@@ -35,23 +35,16 @@ def timestamp_for_logging():
     return ts
 
 
-def gen():
-    # probably delete this... just adding to get this running initially
-    pass
-
-
 # App Globals (do not edit)
 app = Flask(__name__)
-app.config['BASIC_AUTH_USERNAME'] = 'scooter4j'
-app.config['BASIC_AUTH_PASSWORD'] = 'L3tM31nP!'
-basic_auth = BasicAuth(app)
 
 
 @app.route('/health')
 def health_check():
     print(timestamp_for_logging(), ': request made to health_check')
-    response = {}
-    response['status'] = 'All Good Here!'
+    response = {'service': 'PestClassifierService',
+                'time': timestamp_for_logging(),
+                'status': 'All Good Here!'}
     return Response(json.dumps(response), status=200)
 
 
