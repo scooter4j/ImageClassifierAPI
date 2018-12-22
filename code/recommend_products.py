@@ -33,6 +33,7 @@ def timestamp_for_logging():
 def health_check():
     print(timestamp_for_logging(), ': request made to health_check')
     response = {'service': 'ProductRecommendationService',
+                'version': '1.1.0',
                 'time': timestamp_for_logging(),
                 'status': 'All Good Here!'}
     return Response(json.dumps(response), status=200)
@@ -40,75 +41,108 @@ def health_check():
 
 def build_products_collection():
     print(timestamp_for_logging(), ': build_products_collection')
-    active_ingredient1 = {'name': 'Active ingredient 1'}
-    active_ingredient2 = {'name': 'Active ingredient 2'}
-    active_ingredient3 = {'name': 'Active ingredient 3'}
-    active_ingredient4 = {'name': 'Active ingredient 4'}
+    cyfluthrin = {'name': 'Cyfluthrin'}
+    pyrethroid = {'name': 'Pyrethroid'}
+    pyrethrins = {'name': 'Pyrethrins'}
+    acetamiprid = {'name': 'Acetamiprid'}
+    esfenvalerate = {'name': 'Esfenvalerate'}
+    indoxacarb = {'name': 'Indoxacarb'}
+    lambda_cyhalothrin = {'name': 'Lambda-cyhalothrin'}
+    cypermethrin = {'name': 'Cypermethrin'}
+    very_cold_temps = {'name': 'Very Cold Temps'}
 
-    active_ingredients_collection_1 = [active_ingredient1, active_ingredient2]
-    active_ingredients_collection_2 = [active_ingredient3, active_ingredient4]
-
-    product1 = {
-        "product": {
-                       "name": "Product Name 1",
-                       "active_ingredients": active_ingredients_collection_1
-                   }
+    tombstone_helios = {
+        "name": "Tombstone Helios",
+        "active_ingredients": [cyfluthrin]
     }
 
-    product2 = {
-        "product": {
-            "name": "Product Name 2",
-            "active_ingredients": active_ingredients_collection_2
-        }
+    stryker = {
+        "name": "Stryker",
+        "active_ingredients": [pyrethrins]
     }
 
-    japanese_beetle_product = {
-        "product": {
-            "name": "Japanese Beetle Killer",
-            "active_ingredients": active_ingredients_collection_1
-        }
+    tristar = {
+        "name": "Tristar",
+        "active_ingredients": [acetamiprid]
     }
 
-    green_stink_bug_product = {
-        "product": {
-            "name": "Green Stink Bug Killer",
-            "active_ingredients": active_ingredients_collection_1
-        }
+    onslaught = {
+        "name": "Onslaught",
+        "active_ingredients": [esfenvalerate]
     }
 
-    corn_earworm_product = {
-        "product": {
-            "name": "Corn Earworm Killer",
-            "active_ingredients": active_ingredients_collection_1
-        }
+    avaunt = {
+        "name": "Avaunt",
+        "active_ingredients": [indoxacarb]
     }
 
-    green_apple_aphid_product = {
-        "product": {
-            "name": "Green Apple Aphid Killer",
-            "active_ingredients": active_ingredients_collection_1
-        }
+    pyganic = {
+        "name": "PyGanic",
+        "active_ingredients": [pyrethrins]
     }
 
-    bean_leaf_beetle_product = {
-        "product": {
-            "name": "Bean Leaf Beetle Killer",
-            "active_ingredients": active_ingredients_collection_1
-        }
+    demand_cs = {
+        "name": "Demand CS",
+        "active_ingredients": [lambda_cyhalothrin]
     }
 
-    japanese_beetle_products = {'pest': 'japanese_beetle', 'products': [japanese_beetle_product, product1]}
-    green_stink_bug_products = {'pest': 'green_stink_bug', 'products': [green_stink_bug_product, product2, product1]}
-    corn_earworm_products = {'pest': 'corn_earworm', 'products': [corn_earworm_product, product2, product1, product1]}
-    green_apple_aphid_products = {'pest': 'green_apple_aphid', 'products': [green_apple_aphid_product, product2, product1, product2]}
-    bean_leaf_beetle_products = {'pest': 'bean_leaf_beetle', 'products': [bean_leaf_beetle_product, product2]}
+    demonmax = {
+        "name": "DemonMax",
+        "active_ingredients": [cypermethrin]
+    }
+
+    arilon = {
+        "name": "Arilon",
+        "active_ingredients": [indoxacarb]
+    }
+
+    karate = {
+        "name": "Karate",
+        "active_ingredients": [pyrethroid]
+    }
+
+    winter_freeze = {
+        "name": "Cold Harsh Winter",
+        "active_ingredients": [very_cold_temps]
+    }
+
+    japanese_beetle_products = {
+        'pest': 'japanese beetle',
+        'products': [tombstone_helios, karate]
+    }
+
+    green_stink_bug_products = {
+        'pest': 'green stink bug',
+        'products': [demand_cs, demonmax, arilon]
+    }
+
+    corn_earworm_products = {
+        'pest': 'corn earworm',
+        'products': [onslaught, stryker, avaunt]
+    }
+
+    green_apple_aphid_products = {
+        'pest': 'green apple aphid',
+        'products': [pyganic, onslaught, stryker]
+    }
+
+    bean_leaf_beetle_products = {
+        'pest': 'bean leaf beetle',
+        'products': [tombstone_helios, stryker, tristar]
+    }
+
+    furry_lipped_rib_borer_products = {
+        'pest': 'furry lipped rib borer',
+        'products': [winter_freeze]
+    }
 
     all_products = {
         "products": [japanese_beetle_products,
                      green_stink_bug_products,
                      corn_earworm_products,
                      green_apple_aphid_products,
-                     bean_leaf_beetle_products
+                     bean_leaf_beetle_products,
+                     furry_lipped_rib_borer_products
                      ]
     }
 
@@ -119,10 +153,8 @@ def build_products_collection():
 def get_products_for_pest(pest):
     print(timestamp_for_logging(), ': get_products_for_pest, pest =', pest)
     all_products = build_products_collection().get('products')
-    print('all products: ',all_products)
 
     for p in list(all_products):
-        print('p: ', p)
         if p['pest'] == pest:
             return p
 

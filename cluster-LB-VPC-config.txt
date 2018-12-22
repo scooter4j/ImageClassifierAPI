@@ -1,0 +1,56 @@
+
+PestClassifier:
+=============================================================================================
+VPC: vpc-066a3baefa5f5cb57
+Load Balancer: PestClassifier-LB (Listener: HTTP:80, forward to PestClassifier-TG)
+LB SG: sg-06cb28feabbcc2dc7
+Rules:
+---------------------------------------------------------------------------------------------
+Type          Protocol    Port Range          Source                   Description
+HTTP            TCP            80            98.245.169.193/32           sq at home
+HTTP            TCP            80            207.229.111.0/24            OUTLAW
+HTTP            TCP            80            207.229.110.0/24            OUTLAW
+HTTP            TCP            80            207.229.98.0/24             OUTLAW
+All traffic       All         All            sg-06cb28feabbcc2dc7            (default)
+
+TG: PestClassifier-TG
+Cluster: Pest Classifier
+Service: PestClassifierService 
+Service SG: sg-058e5960af3cb5b77
+Rules:
+---------------------------------------------------------------------------------------------
+Type          Protocol    Port Range          Source                   Description
+HTTP            TCP            80            0.0.0.0/0                 Custom TCP Rule
+Custom          TCP            5000      sg-06cb28feabbcc2dc7            (default)
+
+Task Definition: PestClassifier-v100:1
+Docker Image: 689503648097.dkr.ecr.us-east-2.amazonaws.com/classifier-service-fargate:v1.0.0
+
+
+
+RecommendationEngine:
+=============================================================================================
+VPC: vpc-0698d1f08877acf31
+Load Balancer: RecommendationService-LB (Listener: HTTP:80, forward to RecommendationService-TG)
+LB SG: sg-01c63e78a5200d758
+Rules:
+---------------------------------------------------------------------------------------------
+Type          Protocol    Port Range          Source                   Description
+HTTP            TCP            80            98.245.169.193/32           sq at home
+HTTP            TCP            80            207.229.111.0/24            OUTLAW
+HTTP            TCP            80            207.229.110.0/24            OUTLAW
+HTTP            TCP            80            207.229.98.0/24             OUTLAW
+All traffic     All            All           sg-01c63e78a5200d758        (default)
+	
+TG: RecommendationService-TG
+Cluster: RecommendationService
+Service: ProductRecommendService-v101
+
+Service SG: sg-09626b33d4f68fb95
+Rules:
+---------------------------------------------------------------------------------------------
+Type          Protocol    Port Range          Source                   Description
+Custom          TCP            5000            sg-01c63e78a5200d758            (default)
+
+Task Definition: RecommendationService-v101:1
+Docker Image: 689503648097.dkr.ecr.us-east-2.amazonaws.com/product-recommendation-service:v1.0.1

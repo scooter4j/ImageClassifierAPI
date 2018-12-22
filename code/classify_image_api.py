@@ -38,11 +38,21 @@ def timestamp_for_logging():
 # App Globals (do not edit)
 app = Flask(__name__)
 
+pest_descriptions = {
+    'japanese beetle': 'The Japanese beetle is a species of scarab beetle. The adult measures 15 mm in length and 10 mm in width, has iridescent copper-colored elytra and a green thorax and head.',
+    'green stink bug': 'Commonly encountered pest of seeds, grain, nuts and fruit in both the nymph and adult stages across North America. This species is highly polyphagous (has many host plants) which it damages through feeding.',
+    'corn earworm': 'The corn earworm feeds on every part of corn, including the kernels. Severe feeding at the tip of kernels allows entry for diseases and mold growth.',
+    'green apple aphid': 'The apple aphid (often called the green apple aphid) is considered to be the most widespread aphid pest of apple around the world. Recently, entomologists have reported that a nearly identical aphid, the spirea aphid, has become more numerous than apple aphid on apple in Virginia, West Virginia and Maryland.',
+    'bean leaf beetle': 'Adult beetles are 3.5–5.5 millimeters (0.14–0.22 in) in length, and have a punctated elytron at their posterior region. Morphs can occur with red or yellow elyra and four black spots as well as a non-spotted morph. The head is always black.',
+    'furry lipped rib borer': 'Hails from Florida and food of choice is ribs from Pappy\'s Smokehouse.',
+    'unknown': ''
+}
 
 @app.route('/health')
 def health_check():
     print(timestamp_for_logging(), ': request made to health_check')
     response = {'service': 'PestClassifierService',
+                'version': '1.1.0',
                 'time': timestamp_for_logging(),
                 'status': 'All Good Here!'}
     return Response(json.dumps(response), status=200)
@@ -83,15 +93,21 @@ def classify_image():
     results = np.squeeze(results)
 
     top_k = results.argsort()[-3:][::-1]
+    pest_probablilies = []
 
-    response = {}
-    probabilities = {}
     for i in top_k:
         print(labels[i], results[i])
-        probabilities[labels[i]] = "{0:.3f}".format((results[i]))
+        p = {
+            'name': labels[i],
+            'description': pest_descriptions.get(labels[i]),
+            'probability': '{0:.3f}'.format((results[i]))
+        }
+        pest_probablilies.append(p)
 
-    response['probabilities'] = probabilities
-    return Response(json.dumps(response), status=200)
+    probabilities = {
+        "probabilities": pest_probablilies
+    }
+    return Response(json.dumps(probabilities), status=200)
 
 
 def load_graph(model_file):

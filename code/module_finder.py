@@ -1,7 +1,7 @@
 from modulefinder import ModuleFinder
 
 finder = ModuleFinder()
-finder.run_script('classify_image_lambda.py')
+finder.run_script('script_to_be_examined.py')
 
 print('Loaded modules:')
 for name, mod in finder.modules.items():

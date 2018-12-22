@@ -1,4 +1,6 @@
 Set up Docker image with the various parts for running the image classifier
 1. Build Docker image using Dockerfile found in /Users/scottqueen/AI/code/Docker, then run it:
 
+docker run -it -p 5000:5000 --rm -w /tmp beta2:latest bash
+
 docker run -d -p 5000:5000 --rm beta2:latest
